@@ -2,6 +2,7 @@ package chapter4_3_3;
 
 import chapter3_1_4.SequenceStack;
 import chapter3_2_5.CyclicQueue;
+import chapter4_5_4.BSTNode;
 
 //用于操作二叉树的链结点的工具类
 public class TreeNodeTool {
@@ -1770,5 +1771,22 @@ public class TreeNodeTool {
 				}
 			}
 		}
+	}
+
+	public static void ladd(BSTNode lchild, BSTNode parent) {
+		if (parent.getLchild() == null) {
+			parent.setLchild(lchild);
+		} else {
+			System.out.println("该双亲结点已有左孩子结点");
+		}
+		
+	}
+
+	public static void radd(BSTNode rchild, BSTNode parent) {
+		if (parent.getRchild() == null) {
+			parent.setRchild(rchild);
+		} else {
+			System.out.println("该双亲结点已有右孩子结点");
+		}		
 	}
 }
