@@ -3,6 +3,7 @@ package chapter5_2_6;
 public class AdjSideListNode {
 	private AdjVertexListNode adjvex = null;
 	private AdjSideListNode nextarc = null;
+	private String mark = null;
 	
 	public AdjSideListNode() {
 		// TODO Auto-generated constructor stub
@@ -26,6 +27,15 @@ public class AdjSideListNode {
 	public void setNextarc(AdjSideListNode nextarc) {
 		this.nextarc = nextarc;
 	}
+	
+	public String getMark() {
+		return mark;
+	}
+
+	public void setMark(String mark) {
+		this.mark = mark;
+	}
+
 	public void set(AdjVertexListNode adjvex, AdjSideListNode nextarc) {
 		setAdjvex(adjvex);
 		setNextarc(nextarc);
