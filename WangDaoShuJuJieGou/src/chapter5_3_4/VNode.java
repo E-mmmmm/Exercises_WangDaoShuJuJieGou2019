@@ -8,7 +8,7 @@ public class VNode {
 	 */
 	private boolean mark = false;
 	
-		public VNode() {
+	public VNode() {
 		super();
 		// TODO Auto-generated constructor stub
 	}

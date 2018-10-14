@@ -16,6 +16,7 @@ public class GraphTool {
 		if(x < 0 || x >= vArr.length || vArr[x].getFirst() == null) {
 			return -1;
 		} else {
+			vArr[x].getFirst().setMark(true);
 			return vArr[x].getFirst().getAdjvex();
 		}
 	}
