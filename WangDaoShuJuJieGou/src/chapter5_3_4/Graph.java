@@ -1,4 +1,7 @@
 package chapter5_3_4;
+
+import chapter3_1_4.SequenceStack;
+
 /**
  * 图类
  * @author Administrator
@@ -36,6 +39,9 @@ public class Graph {
 	 * 当前最后一个顶点的顶点号
 	 */
 	int current = -1;
+	
+	private boolean[] visited =  new boolean[vexnum];
+	
 	/**
 	 * 构造方法，必须声明图的类型
 	 * @param type 图的类型
@@ -73,14 +79,25 @@ public class Graph {
 	 * @param y 无向边的另一个顶点或有向边的弧头
 	 * @return 若边存在则返回true，否则返回false
 	 */
-	public boolean adjacent(Graph g, VNode x, VNode y) {
-		int xLoc = location(g, x);
-		int yLoc = location(g, y);
-		
-		if(mst[xLoc][yLoc] == 1) {
+	public boolean adjacent(Graph g, int x, int y) {
+		if(mst[x][y] == 1) {
 			return true;
 		} else {
 			return false;
+		}
+	}
+	
+	/**
+	 * 列出图中与结点x相邻的边
+	 * 会显示其顶点号和data
+	 * @param g 操作的图
+	 * @param x 操作的结点
+	 */
+	public void Neighbors(Graph g, int x) {
+		ArcNode arcNode = vertexs[x].getFirst();
+		while(arcNode != null) {
+			System.out.println(arcNode.getAdjvex() + vertexs[arcNode.getAdjvex()].getData());
+			arcNode = arcNode.getNext();
 		}
 	}
 	
@@ -95,6 +112,13 @@ public class Graph {
 			vertexsTemp[x] = vertexs[x];
 		}
 		vertexs = vertexsTemp;
+		
+		//访问标记数组的扩容
+		boolean[] visitedTemp = new boolean[capacity];
+		for(int x = 0; x < vexnum; x++) {
+			visitedTemp[x] = visited[x];
+		}
+		visited = visitedTemp;
 		
 		//邻接矩阵的扩容
 		int[][] mstTemp = new int[capacity][capacity];
@@ -141,13 +165,11 @@ public class Graph {
 	 * @param g 操作的图
 	 * @param x 删除的顶点
 	 */
-	public VNode deleteVertex(Graph g, VNode x) {
-		int loc = location(g, x);
-		
-		if(loc > current || loc == -1) {
+	public void deleteVertex(Graph g, int x) {
+		if(x > current || x == -1) {
 			System.out.println("该顶点不存在");
-			return null;
-		} else if(loc == current) {
+			return;
+		} else if(x == current) {
 			//从顶点表中删除
 			vertexs[current] = null;
 			//从邻接矩阵中删除
@@ -158,18 +180,18 @@ public class Graph {
 			current--;
 		} else {
 			//从顶点表中删除
-			vertexs[loc] = null;
-			trimVertexs(loc);
+			vertexs[x] = null;
+			trimVertexs(x);
 			//从邻接矩阵中删除
 			//整理列
 			for(int line = 0; line < current; line++) {
-				for(int column = loc; column < current-1; column++) {
+				for(int column = x; column < current-1; column++) {
 					mst[line][column] = mst[line][column+1];
 				}
 			}
 			//整理行
 			for(int column = 0; column < current; column++) {
-				for(int line = loc; line < current-1; line++) {
+				for(int line = x; line < current-1; line++) {
 					mst[column][line] = mst[column][line+1];
 				}
 			}
@@ -181,8 +203,6 @@ public class Graph {
 			
 			current--;
 		}
-		
-		return x;
 	}
 	
 	/**
@@ -201,22 +221,20 @@ public class Graph {
 	 * @param x 无向边的一点，有向边的弧尾
 	 * @param y 无向边的另一点，有向边的弧头
 	 */
-	public void addEdge(Graph g, VNode x, VNode y) {
-		int xLoc = location(g, x);
-		int yLoc = location(g, y);
+	public void addEdge(Graph g, int x, int y) {
 		//邻接表
-		if(xLoc == -1 || yLoc == -1 || xLoc > current || yLoc > current) {
+		if(x == -1 || y == -1 || x > current || y > current) {
 			System.out.println("顶点不存在，无法添加边");
 			return;
 		} else {
 			//顶点x的邻接点y
 			ArcNode arcY = new ArcNode();
-			arcY.setAdjvex(yLoc);
+			arcY.setAdjvex(y);
 
-			ArcNode arcNode = x.getFirst();
-			if(x.getFirst() != null) {
+			ArcNode arcNode = vertexs[x].getFirst();
+			if(vertexs[x].getFirst() != null) {
 				while(arcNode.getNext() != null) {
-					if(arcNode.getAdjvex() != yLoc) {
+					if(arcNode.getAdjvex() != y) {
 						arcNode = arcNode.getNext();
 					} else {
 						System.out.println("该边已存在");
@@ -225,22 +243,22 @@ public class Graph {
 				
 				arcNode.setNext(arcY);
 			} else {
-				x.setFirst(arcY);
+				vertexs[x].setFirst(arcY);
 			}
 		}
 		//邻接矩阵
-		mst[xLoc][yLoc] = 1;
+		mst[x][y] = 1;
 		
 		//若是无向图，需要再反向添加一次
 		if(type == 0) {
 			//邻接表
 			ArcNode arcX = new ArcNode();
-			arcX.setAdjvex(xLoc);
+			arcX.setAdjvex(x);
 			
-			if(y.getFirst() == null) {
-				y.setFirst(arcX);
+			if(vertexs[y].getFirst() == null) {
+				vertexs[y].setFirst(arcX);
 			} else {
-				ArcNode arcNode = y.getFirst();
+				ArcNode arcNode = vertexs[y].getFirst();
 				while(arcNode.getNext() != null) {
 					arcNode = arcNode.getNext();
 				}
@@ -249,9 +267,10 @@ public class Graph {
 			}
 			
 			//邻接矩阵
-			mst[yLoc][xLoc] = 1;
+			mst[y][x] = 1;
 		}
 	}
+	
 	/**
 	 * 若边存在，则从图中删除该边
 	 * @param g 操作的图
@@ -303,7 +322,7 @@ public class Graph {
 	 * @return 若顶点x存在且其有邻接点，则返回其第一个邻接点的顶点号，
 	 * 			否则，返回-1。
 	 */
-	public static int firstNeighbor(VNode[] vArr, int x) {
+	public int firstNeighbor(VNode[] vArr, int x) {
 		if(x < 0 || x >= vArr.length || vArr[x].getFirst() == null) {
 			return -1;
 		} else {
@@ -313,27 +332,67 @@ public class Graph {
 	}
 	
 	/**
-	 * 返回除y之外顶点x的下一个邻接点的顶点号
+	 * 返回顶点x的邻接点y的下一个邻接点的顶点号
 	 * @param vArr 顶点表
 	 * @param x	顶点x
 	 * @param y 顶点y
-	 * @return 返回除y之外顶点x的下一个邻接点的顶点号，
-	 * 			若y是x的最后一个邻接点，则返回-1
+	 * @return 邻接点的顶点号，做不存在则返回-1
 	 */
-	public static int nextNeighbor(VNode[] vArr, int x, int y) {
+	public int nextNeighbor(VNode[] vArr, int x, int y) {
 		ArcNode arcNode = vArr[x].getFirst();
 		
 		while(arcNode != null) {
-			if(arcNode.getAdjvex() == y || 
-					arcNode.isMark() == true) {
-				arcNode.setMark(true);
+			if(arcNode.getAdjvex() != y) {
 				arcNode = arcNode.getNext();
-			} else if(arcNode.isMark() == false) {
-				arcNode.setMark(true);
-				return arcNode.getAdjvex();
+			} else if(arcNode.getNext() != null) {
+				return arcNode.getNext().getAdjvex();
 			}
 		}
 		
 		return -1;
+	}
+	
+	/**
+	 * 求图g中顶点x的一个未访问过的邻接点
+	 * @param g 顶点x所在的图 
+	 * @param x 顶点x
+	 * @return 邻接点的顶点号，若不存在则返回-1
+	 */
+	public int unVisitedNeighbor(Graph g, VNode x) {
+		ArcNode arcNode = x.getFirst();
+		while(arcNode != null) {
+			if(arcNode.isMark() == false) {
+				return arcNode.getAdjvex();
+			}else {
+				arcNode = arcNode.getNext();
+			}
+		}
+		
+		return -1;
+	}
+	/*
+	 * 思路
+	 * 	类似树的先序遍历的非递归算法
+	 * 	利用栈来模拟递归
+	 * 	
+	 *  1、若可能，访问一个邻接的为访问过的顶点，标记它，并压入栈中
+	 *  2、若无法做到1，且栈非空，则从栈中弹出一个顶点
+	 *  3、若1、2都无法做到，则算法结束
+	 */
+	public void DFS(Graph g) {
+		//递归工作栈
+		SequenceStack<Integer> ss = new SequenceStack<Integer>();
+		ss.InitStack();
+		
+		ss.Push(0);
+		//当前顶点的顶点号
+		int top = -1;
+		//当前顶点的邻接点的顶点号
+		int nei = -1;
+		while(!ss.StackEmpty()) {
+			top = ss.GetTop();
+			System.out.println();
+			nei = unVisitedNeighbor(g, vertexs[top]);
+		}
 	}
 }

@@ -3,10 +3,6 @@ package chapter5_3_4;
 public class VNode {
 	private String data = null;
 	private ArcNode first = null;
-	/**
-	 * 记录该顶点是否被访问
-	 */
-	private boolean mark = false;
 	
 	public VNode() {
 		super();
@@ -23,12 +19,6 @@ public class VNode {
 	}
 	public void setFirst(ArcNode first) {
 		this.first = first;
-	}
-	public boolean isMark() {
-		return mark;
-	}
-	public void setMark(boolean mark) {
-		this.mark = mark;
 	}
 	public void setFirst(String data, ArcNode first) {
 		this.data = data;

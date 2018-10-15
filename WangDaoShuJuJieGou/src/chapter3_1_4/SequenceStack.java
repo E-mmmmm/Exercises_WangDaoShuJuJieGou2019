@@ -95,7 +95,7 @@ public class SequenceStack<T> {
 	/**
 	 * 
 	 * @return
-	 * 		’ª∂•
+	 * 		’ª∂•÷∏’Î
 	 */
 	public int getTop() {
 		return top;
