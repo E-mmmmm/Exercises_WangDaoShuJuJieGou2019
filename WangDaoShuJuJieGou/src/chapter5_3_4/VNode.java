@@ -8,6 +8,11 @@ public class VNode {
 		super();
 		// TODO Auto-generated constructor stub
 	}
+	public VNode(String data) {
+		super();
+		this.data = data;
+	}
+
 	public String getData() {
 		return data;
 	}
