@@ -25,7 +25,10 @@ public class GraphIsTree {
 		g.addEdge(ver2, ver5);
 		//·ÇÊ÷
 //		g.addEdge(ver3, ver5);
-		System.out.println(g.graphIsTree());
+//		System.out.println(g.graphIsTree());
+		g.DFSTraverse();
+		System.out.println();
+		g.DFSNonRecursion(ver1);
 
 	}	
 

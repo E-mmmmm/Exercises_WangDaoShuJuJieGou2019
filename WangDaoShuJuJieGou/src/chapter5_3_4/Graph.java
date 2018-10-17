@@ -402,6 +402,12 @@ public class Graph {
 	 */
 	public  boolean graphIsTree(){ 
 		DFSOfGIT(0);
+		
+		//重置访问状态
+		for(int x = 0; x <= current; x++) {
+			visited[x] = false;
+		}
+		
 		System.out.println("vNum:" + vNum + " ,eNum:" + eNum);
 		if(vNum == current+1 && eNum == 2*(current)) {
 			return true;
@@ -411,8 +417,7 @@ public class Graph {
 	}
 	/**
 	 * 配合graphIsTree使用的深度优先遍历
-	 * @param vArr 图G
-	 * @param v 遍历的起始顶点
+	 * @param v DFS的起始顶点
 	 */
 	private  void DFSOfGIT(int v) {
 		visited[v] = true;
@@ -431,6 +436,47 @@ public class Graph {
 		
 	}
 	
+	/**
+	 * 深度优先遍历
+	 */
+	public void DFSTraverse() {
+		for(int x = 0; x < current; x++) {
+			if(visited[x] == false) {
+				DFS(x);
+			}
+		}
+		
+		//重置访问状态
+		for(int x = 0; x <= current; x++) {
+			visited[x] = false;
+		}
+	}
+	/**
+	 * 深度优先遍历
+	 * @param v DFS的起始顶点
+	 */
+	private  void DFS(int v) {
+		System.out.print(vertexs[v].getData() + ", ");
+		visited[v] = true;
+		int w = firstNeighbor(v);
+		
+		while(w != -1) {
+			if(visited[w] == false) {
+				DFS(w);
+			}
+			
+			w = nextNeighbor(v, w);
+		}
+	}
+	
+	/**
+	 * 显示顶点x的信息
+	 * @param x 顶点x
+	 */
+	private void displayVertex(int x) {
+		System.out.print(vertexs[x].getData() + ", ");
+	}
+	
 	/*
 	 * 思路
 	 * 	类似树的先序遍历的非递归算法
@@ -440,24 +486,34 @@ public class Graph {
 	 *  2、若无法做到1，且栈非空，则从栈中弹出一个顶点
 	 *  3、若1、2都无法做到，则算法结束
 	 */
-	public void DFS(int v) {
+	/**
+	 * 非递归的DFS
+	 * @param v DFS的起始顶点
+	 */
+	public void DFSNonRecursion(int v) {
 		//递归工作栈
 		SequenceStack<Integer> ss = new SequenceStack<Integer>();
 		ss.InitStack();
 		ss.Push(v);
+		displayVertex(v);
+		visited[v] = true;
 		
 		//当前顶点
-		int cur = v;
+		int w = -1;
 		while(!ss.StackEmpty()) {
-			if(cur != -1) {
-				System.out.println(vertexs[cur].getData());
-				visited[cur] = true;
-				ss.Push(cur);
-				cur = nextNeighbor(v, cur);
-			} else {
+			w = unVisitedNeighbor((int)ss.GetTop());
+			if(w == -1) {
 				ss.Pop();
-				cur = ss.GetTop();
+			} else {
+				displayVertex(w);
+				visited[w] = true;
+				ss.Push(w);
 			}
+		}
+		
+		//重置访问状态
+		for(int x = 0; x <= current; x++) {
+			visited[x] = false;
 		}
 	}
 }
