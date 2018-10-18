@@ -1,6 +1,7 @@
 package chapter5_3_4;
 
 import chapter3_1_4.SequenceStack;
+import chapter3_2_5.CyclicQueue;
 
 /**
  * 图类
@@ -478,6 +479,7 @@ public class Graph {
 	}
 	
 	/*
+	 * 第3题
 	 * 思路
 	 * 	类似树的先序遍历的非递归算法
 	 * 	利用栈来模拟递归
@@ -515,5 +517,46 @@ public class Graph {
 		for(int x = 0; x <= current; x++) {
 			visited[x] = false;
 		}
+	}
+	
+	//第4题（1）
+	boolean flag = false;
+	/**
+	 * 基于深度优先遍历，判断是否存在由顶点i到顶点j的路径
+	 * @param i 顶点i
+	 * @param j 顶点j
+	 * @return 路径存在则返回true，否则返回false
+	 */
+	public boolean IsPathByDFS(int i, int j) {
+		IsPathByDFSOperation(i, j);
+		
+		//重置访问状态
+		for(int x = 0; x <= current; x++) {
+			visited[x] = false;
+		}
+		
+		return flag;
+	}
+	private void IsPathByDFSOperation(int i, int j) {
+		if(i == j) {
+			flag =  true;
+		} else {
+			visited[i] = true;
+			int w = firstNeighbor(i);
+			while(w != -1) {
+				if(visited[w] == false) {
+					IsPathByDFSOperation(w, j);
+				}
+				w = nextNeighbor(i, w);
+			}
+		}
+	}
+	
+	//第4题（2）
+	public boolean IsPathByBFS(int i, int j) {
+		CyclicQueue<Integer> cq = new CyclicQueue<>();
+		cq.initQueue();
+		
+		
 	}
 }

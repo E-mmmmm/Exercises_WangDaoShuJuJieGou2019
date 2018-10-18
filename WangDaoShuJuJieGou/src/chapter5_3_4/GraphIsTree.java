@@ -19,16 +19,18 @@ public class GraphIsTree {
 		int ver4 = g.insertVertex(v4);
 		int ver5 = g.insertVertex(v5);
 		//Ìí¼Ó±ß
-		g.addEdge(ver1, ver2);
+//		g.addEdge(ver1, ver2);
 		g.addEdge(ver1, ver3);
 		g.addEdge(ver2, ver4);
 		g.addEdge(ver2, ver5);
 		//·ÇÊ÷
 //		g.addEdge(ver3, ver5);
 //		System.out.println(g.graphIsTree());
-		g.DFSTraverse();
-		System.out.println();
-		g.DFSNonRecursion(ver1);
+//		g.DFSTraverse();
+//		System.out.println();
+//		g.DFSNonRecursion(ver1);
+		
+		System.out.println(g.IsPathByDFS(ver1, ver5));
 
 	}	
 
