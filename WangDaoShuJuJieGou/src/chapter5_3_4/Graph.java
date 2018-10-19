@@ -31,7 +31,7 @@ public class Graph {
 	/**
 	 * 顶点表
 	 */
-	private VNode[] vertexs = new VNode[capacity];
+	public VNode[] vertexs = new VNode[capacity];
 	/**
 	 * 顶点的访问标记数组
 	 */
@@ -474,7 +474,7 @@ public class Graph {
 	 * 显示顶点x的信息
 	 * @param x 顶点x
 	 */
-	private void displayVertex(int x) {
+	public void displayVertex(int x) {
 		System.out.print(vertexs[x].getData() + ", ");
 	}
 	
@@ -484,7 +484,7 @@ public class Graph {
 	 * 	类似树的先序遍历的非递归算法
 	 * 	利用栈来模拟递归
 	 * 	
-	 *  1、若可能，访问一个邻接的为访问过的顶点，标记它，并压入栈中
+	 *  1、若可能，访问一个邻接的未访问过的顶点，标记它，并压入栈中
 	 *  2、若无法做到1，且栈非空，则从栈中弹出一个顶点
 	 *  3、若1、2都无法做到，则算法结束
 	 */
@@ -528,6 +528,9 @@ public class Graph {
 	 * @return 路径存在则返回true，否则返回false
 	 */
 	public boolean IsPathByDFS(int i, int j) {
+		//因flag被多个函数共用，所以使用前需要重置flag
+		flag = false;
+		
 		IsPathByDFSOperation(i, j);
 		
 		//重置访问状态
@@ -540,6 +543,7 @@ public class Graph {
 	private void IsPathByDFSOperation(int i, int j) {
 		if(i == j) {
 			flag =  true;
+			return;
 		} else {
 			visited[i] = true;
 			int w = firstNeighbor(i);
@@ -553,10 +557,124 @@ public class Graph {
 	}
 	
 	//第4题（2）
+	/**
+	 * 基于广度优先遍历，判断是否存在由顶点i到顶点j的路径
+	 * @param i 顶点i
+	 * @param j 顶点j
+	 * @return 路径存在则返回true，否则返回false
+	 */
 	public boolean IsPathByBFS(int i, int j) {
+		//因flag被多个函数共用，所以使用前需要重置flag
+		flag = false;
+		
+		IsPathByBFSOperation(i, j);
+		
+		//重置访问状态
+		for(int x = 0; x <= current; x++) {
+			visited[x] = false;
+		}
+		
+		return flag;
+	}
+	private void IsPathByBFSOperation(int i, int j) {
 		CyclicQueue<Integer> cq = new CyclicQueue<>();
 		cq.initQueue();
 		
+		cq.enQueue(i);
+		visited[i] = true;
+		int w = -1;
 		
+		while(!cq.queueEmpty()) {
+			w = cq.deQueue();
+			int v = firstNeighbor(w);
+				
+			while(v != -1) {
+				if(visited[v] != true) {
+					if(v == j) {
+						flag = true;
+					}
+					cq.enQueue(v);
+					visited[v] = true;
+				}
+				v = nextNeighbor(w, v);
+			}
+		}
 	}
+	
+	/*
+	 * 第5题
+	 * 思路
+	 * 	基于非递归的深度优先遍历
+	 *  从顶点i开始，当遍历到结点j时，无论j是否被访问，输出栈中的所有顶点
+	 *  当栈为空时，结束
+	 */
+	public void showPath(int i, int j) {
+		SequenceStack<Integer> ss = new SequenceStack<>();
+		ss.InitStack();
+		//辅助栈
+		SequenceStack<Integer> assist = new SequenceStack<>();
+		assist.InitStack();
+		
+		ss.Push(i);
+		visited[i] = true;
+		int w = -1;
+		
+		while(!ss.StackEmpty()) {
+			w = firstNeighbor((int)ss.GetTop());
+			
+			if(w != -1) {
+				//输出路径
+				if(w == j) {
+					System.out.print("No.1: ");
+					int temp = -1;
+					while(!ss.StackEmpty()) {
+						assist.Push((int)ss.Pop());
+					}
+					while(!assist.StackEmpty()) {
+						temp = assist.Pop();
+						displayVertex(temp);
+						ss.Push(temp);
+					}
+					displayVertex(w);
+					System.out.println();
+				}
+				
+				if(visited[w] != true) {
+					ss.Push(w);
+				} else {
+			}
+		}
+		
+		while(!ss.StackEmpty()) {
+			w = unVisitedNeighbor((int)ss.GetTop());
+			
+			//输出路径
+			if(w == j) {
+				System.out.print("No.1: ");
+				int temp = -1;
+				while(!ss.StackEmpty()) {
+					assist.Push((int)ss.Pop());
+				}
+				while(!assist.StackEmpty()) {
+					temp = assist.Pop();
+					displayVertex(temp);
+					ss.Push(temp);
+				}
+				displayVertex(w);
+				System.out.println();
+			}
+			
+			if(w == -1) {
+				ss.Pop();
+			} else {
+				ss.Push(w);
+				visited[w] = true;
+			}
+		}
+		
+		//重置访问状态
+		for(int x = 0; x <= current; x++) {
+			visited[x] = false;
+		}
+		}}
 }
