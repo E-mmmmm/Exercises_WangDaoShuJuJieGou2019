@@ -1,7 +1,7 @@
 package chapter5_3_4;
 
 //判断一个无向图G是否是一棵树
-public class GraphIsTree {
+public class GraphTest {
 	public static void main(String[] args) {
 		//创建图
 		Graph g = new Graph(0);
@@ -21,12 +21,17 @@ public class GraphIsTree {
 		//添加边
 		g.addEdge(ver1, ver2);
 		g.addEdge(ver1, ver3);
+		g.addEdge(ver1, ver4);
+		g.addEdge(ver1, ver5);
+		g.addEdge(ver2, ver3);
 		g.addEdge(ver2, ver4);
 		g.addEdge(ver2, ver5);
+		g.addEdge(ver3, ver4);
 		g.addEdge(ver3, ver5);
+		g.addEdge(ver4, ver5);
 		//非树
 //		g.addEdge(ver3, ver5);
-		
 //		g.showPath(ver1, ver5);
+		g.findPath(ver1, ver5);
 	}	
 }

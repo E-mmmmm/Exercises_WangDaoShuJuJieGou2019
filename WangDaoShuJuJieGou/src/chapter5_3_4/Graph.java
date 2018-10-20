@@ -603,78 +603,43 @@ public class Graph {
 	
 	/*
 	 * 第5题
-	 * 思路
-	 * 	基于非递归的深度优先遍历
-	 *  从顶点i开始，当遍历到结点j时，无论j是否被访问，输出栈中的所有顶点
-	 *  当栈为空时，结束
+	 * 书上思路
 	 */
-	public void showPath(int i, int j) {
-		SequenceStack<Integer> ss = new SequenceStack<>();
-		ss.InitStack();
-		//辅助栈
-		SequenceStack<Integer> assist = new SequenceStack<>();
-		assist.InitStack();
-		
-		ss.Push(i);
-		visited[i] = true;
+	int[] path = new int[capacity];
+	/**
+	 * 输出从顶点u到顶点v的所有简单路径
+	 * @param u 顶点u
+	 * @param v 顶点v
+	 */
+	public void findPath(int u, int v) {
+		findPathOperate(u, v, -1);
+	}
+	/**
+	 * 输出从顶点u到顶点v的所有简单路径的主要操作
+	 * @param u 顶点u
+	 * @param v 顶点v
+	 * @param d 路径长度
+	 */
+	private void findPathOperate(int u, int v, int d) {
 		int w = -1;
+		d++;
+		path[d] = u;
+		visited[u] = true;
 		
-		while(!ss.StackEmpty()) {
-			w = firstNeighbor((int)ss.GetTop());
-			
-			if(w != -1) {
-				//输出路径
-				if(w == j) {
-					System.out.print("No.1: ");
-					int temp = -1;
-					while(!ss.StackEmpty()) {
-						assist.Push((int)ss.Pop());
-					}
-					while(!assist.StackEmpty()) {
-						temp = assist.Pop();
-						displayVertex(temp);
-						ss.Push(temp);
-					}
-					displayVertex(w);
-					System.out.println();
-				}
-				
-				if(visited[w] != true) {
-					ss.Push(w);
-				} else {
+		if(u == v) {
+			for(int x = 0; x < d+1; x++) {
+				displayVertex(path[x]);
 			}
+			System.out.println();
 		}
 		
-		while(!ss.StackEmpty()) {
-			w = unVisitedNeighbor((int)ss.GetTop());
-			
-			//输出路径
-			if(w == j) {
-				System.out.print("No.1: ");
-				int temp = -1;
-				while(!ss.StackEmpty()) {
-					assist.Push((int)ss.Pop());
-				}
-				while(!assist.StackEmpty()) {
-					temp = assist.Pop();
-					displayVertex(temp);
-					ss.Push(temp);
-				}
-				displayVertex(w);
-				System.out.println();
+		w = firstNeighbor(u);
+		while(w != -1) {
+			if(visited[w] != true) {
+				findPathOperate(w, v, d);
 			}
-			
-			if(w == -1) {
-				ss.Pop();
-			} else {
-				ss.Push(w);
-				visited[w] = true;
-			}
+			w = nextNeighbor(u, w);
 		}
-		
-		//重置访问状态
-		for(int x = 0; x <= current; x++) {
-			visited[x] = false;
-		}
-		}}
+		visited[u] = false;
+	}
 }
